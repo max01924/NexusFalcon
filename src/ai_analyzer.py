@@ -57,15 +57,15 @@ def analyze_email(email_body):
     except json.JSONDecodeError as e:
         raise ValueError(f"Ungültiges JSON in der Antwort: {e}") from e
     
-    summary = data.get("summary")
-    one_sentence = data.get("one_sentence")
+    body_summary = data.get("summary")
+    ai_tag_sentence = data.get("one_sentence")
     
-    if not isinstance(summary, list):
-        raise ValueError('"summary" muss eine Liste sein.')
+    if not isinstance(body_summary, list):
+        raise ValueError('"body_summary" muss eine Liste sein.')
     
-    summary = [str(item) for item in summary]
+    body_summary = [str(item) for item in body_summary]
     
-    if not isinstance(one_sentence, str):
-        raise ValueError('"one_sentence" muss ein String sein.')
+    if not isinstance(ai_tag_sentence, str):
+        raise ValueError('"ai_tag_sentence" muss ein String sein.')
     
-    return {"summary": summary, "one_sentence": one_sentence}
+    return {"body_summary": body_summary, "ai_tag_sentence": ai_tag_sentence}

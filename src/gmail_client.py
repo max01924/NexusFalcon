@@ -90,27 +90,27 @@ def parse_email(email_data):
     # Header-Daten extrahieren
     subject = next((h['value'] for h in headers if h['name'] == 'Subject'), 'Kein Betreff')
     sender = next((h['value'] for h in headers if h['name'] == 'From'), 'Unbekannt')
-    date = next((h['value'] for h in headers if h['name'] == 'Date'), '')
+    date_received = next((h['value'] for h in headers if h['name'] == 'Date'), '')
     
     # Body extrahieren
-    body = ''
+    body_full = ''
     if 'parts' in email_data['payload']:
         for part in email_data['payload']['parts']:
             if part['mimeType'] == 'text/plain':
-                body = part['body'].get('data', '')
+                body_full = part['body'].get('data', '')
                 break
     else:
-        body = email_data['payload']['body'].get('data', '')
+        body_full = email_data['payload']['body'].get('data', '')
     
     # Base64 decode
-    if body:
+    if body_full:
         import base64
-        body = base64.urlsafe_b64decode(body).decode('utf-8')
+        body_full = base64.urlsafe_b64decode(body_full).decode('utf-8')
     
     return {
-        'message_id': email_data['id'],
+        'gmail_message_id': email_data['id'],
         'sender': sender,
         'subject': subject,
-        'date': date,
-        'body': body
+        'date_received': date_received,
+        'body_full': body_full
     }
