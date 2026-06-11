@@ -44,14 +44,16 @@ def insert_email(email_data):
     
     else:
         cursor.execute("""
-            INSERT INTO emails (gmail_message_id, sender, subject, date_received, body_full, is_read)
-            VALUES (?, ?, ?, ?, ?, ?)               
+            INSERT INTO emails (gmail_message_id, sender, subject, date_received, body_full, body_summary, ai_tag_sentence, is_read)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)               
         """, (
             email_data["gmail_message_id"],
             email_data["sender"],
             email_data["subject"],
-            email_data["date"],
-            email_data["body"],
+            email_data["date_received"],
+            email_data["body_full"],
+            email_data["body_summary"],
+            email_data["ai_tag_sentence"],
             0  # is_read = False
         ))
         conn.commit()
