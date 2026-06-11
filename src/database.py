@@ -76,7 +76,7 @@ def get_email_by_id(email_id):
     cursor = conn.cursor()
     
     cursor.execute("SELECT * FROM emails WHERE id = ?", (email_id,))
-    row = cursor. fetchone()
+    row = cursor.fetchone()
     conn.close()
 
     if row:
