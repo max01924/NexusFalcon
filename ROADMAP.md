@@ -68,7 +68,7 @@
 **Tasks:**
 - \[ \] **✅** Datenbank\-Schema entwerfen \(welche Felder brauchst du?\)
 - \[ \] **✅** database\.py mit SQLite\-Connection erstellen
-- \[ \] **✅** Tabelle emails anlegen \(id, gmail\_message\_id, sender, subject, date, body\_full, body\_summary, ai\_tag, is\_read, created\_at\)
+- \[ \] **✅** Tabelle emails anlegen \(id, gmail\_message\_id, sender, subject, date\_received, body\_full, body\_summary, ai\_tag\_sentence, is\_read, created\_at, replied\_at\)
 - \[ \] **✅** Funktion: insert\_email\(\) \- speichert neue Mail
 - \[ \] **✅** Funktion: get\_all\_emails\(\) \- gibt alle Mails zurück
 - \[ \] **✅** Funktion: get\_email\_by\_id\(\) \- einzelne Mail
@@ -84,24 +84,25 @@
 **Tools/Libraries:**
 - sqlite3 \(built\-in Python\)
 **Wie wird getestet?** Testskript fügt Mock\-E\-Mail ein, ruft sie ab, prüft ob Felder korrekt sind, löscht Testdaten\.
-**Was danach?** OpenAI\-Integration kann starten, weil wir Analyse\-Ergebnisse speichern können\.
-## **PHASE 4: OpenAI Integration ✅**
+**Was danach?** KI\-Integration kann starten, weil wir Analyse\-Ergebnisse speichern können\.
+## **PHASE 4: KI\-Integration \(Groq\) ✅**
 **Status:** Abhängig von Phase 3
-**Ziel:** E\-Mail\-Inhalte via OpenAI API analysieren und zusammenfassen
+**Ziel:** E\-Mail\-Inhalte via Groq API analysieren und zusammenfassen
+**Anpassung \(Nachtrag\):** Ursprünglich war OpenAI vorgesehen\. Aus finanziellen Gründen \(kein eigener OpenAI\-API\-Key\) wurde auf Groq umgestellt \- kostenloses Kontingent, gleiches Grundprinzip \(Chat\-Completion mit JSON\-Response\-Format\)\.
 **Features:**
-- OpenAI API Client
+- Groq API Client
 - Prompt Engineering für E\-Mail\-Analyse
 - Zusammenfassung in Bulletpoints
 - Ein\-Satz\-Tag generieren
 - Floskeln entfernen
 **Tasks:**
-- \[ \] **✅** OpenAI Python Library installieren \(openai\)
-- \[ \] **✅** API Key sicher speichern \(Umgebungsvariable oder config\)
+- \[ \] **✅** Groq Python Library installieren \(groq\)
+- \[ \] **✅** API Key sicher speichern \(Umgebungsvariable GROQ\_API\_KEY\)
 - \[ \] **✅** ai\_analyzer\.py Modul erstellen
-- \[ \] **✅** Funktion: analyze\_email\(body\_text\) \- gibt Dict zurück \{summary, one\_sentence, sender\_classification\}
+- \[ \] **✅** Funktion: analyze\_email\(email\_body\) \- gibt Dict zurück \{body\_summary, ai\_tag\_sentence\}
 - \[ \] **✅** Prompt schreiben: "Fasse folgende E\-Mail zusammen, entferne Floskeln\.\.\."
-- \[ \] **✅** Modell\-Auswahl testen \(gpt\-3\.5\-turbo vs gpt\-4 \- Kosten vs Qualität\)
-- \[ \] **✅** Error Handling \(API down, Rate Limit, Token Limit\)
+- \[ \] **✅** Modell\-Auswahl \(llama\-3\.3\-70b\-versatile über Groq \- kostenlos nutzbar\)
+- \[ \] **✅** Error Handling \(leere Antwort, abgeschnittene Antwort durch Token\-Limit, ungültiges JSON\)
 - \[ \] **✅** Integration mit DB: Nach Gmail\-Abruf \-> AI\-Analyse \-> DB speichern
 **Deliverables:**
 - ai\_analyzer\.py Modul
@@ -111,7 +112,7 @@
 **Was wird gebaut?** Die "Intelligenz" \- Kern\-Feature deiner App\.
 **Warum jetzt?** Wir haben Daten \(Gmail\) und Speicher \(DB\)\. Jetzt kommt die Verarbeitung\. Prompt Engineering braucht Iteration, daher früh starten\.
 **Tools/Libraries:**
-- openai
+- groq
 **Wie wird getestet?** 5 Test\-E\-Mails \(unterschiedliche Längen/Inhalte\) analysieren, Output manuell prüfen ob sinnvoll\.
 **Was danach?** GUI kann gebaut werden, weil Backend\-Pipeline komplett ist\.
 ## **PHASE 5: Basic GUI \(Tkinter\) ⏳**
@@ -208,7 +209,7 @@
 **Tasks:**
 - \[ \] ⏳ GUI erweitern: "Antworten"\-Button \+ Textfeld \(toggle\)
 - \[ \] ⏳ Radio\-Buttons: "Manuell schreiben" vs "AI generieren lassen"
-- \[ \] ⏳ AI\-Modus: Bulletpoints\-Input \-> OpenAI generiert formelle Antwort
+- \[ \] ⏳ AI\-Modus: Bulletpoints\-Input \-> Groq generiert formelle Antwort
 - \[ \] ⏳ Gmail API: send\_email\(to, subject, body\) Funktion
 - \[ \] ⏳ Threading\-ID beibehalten \(Reply in Thread, nicht neue Mail\)
 - \[ \] ⏳ Error Handling: Send failed \-> User\-Feedback
@@ -222,7 +223,7 @@
 **Warum jetzt?** User sieht Mails, bekommt Notifications\. Nächster logischer Schritt: Antworten\.
 **Tools/Libraries:**
 - Gmail API \(bereits vorhanden\)
-- OpenAI API \(bereits vorhanden\)
+- Groq API \(bereits vorhanden\)
 **Wie wird getestet?** Test\-Mail an dich selbst schicken, App öffnet sie, Reply verfassen \(manuell \+ AI\), prüfen ob in Gmail als Antwort erscheint\.
 **Was danach?** Erweiterte UI\-Features für bessere UX\.
 ## **PHASE 9: Erweiterte UI Features ⏳**
@@ -263,7 +264,7 @@
 **Tasks:**
 - \[ \] ⏳ tests/ Ordner erstellen
 - \[ \] ⏳ Unit Tests für DB\-Funktionen
-- \[ \] ⏳ Unit Tests für Gmail/OpenAI Clients \(Mocking\)
+- \[ \] ⏳ Unit Tests für Gmail/Groq Clients \(Mocking\)
 - \[ \] ⏳ Integration Test: Vollständiger Flow \(Gmail \-> AI \-> DB \-> GUI\)
 - \[ \] ⏳ Logging überarbeiten \(levels: INFO, WARNING, ERROR\)
 - \[ \] ⏳ PyInstaller Config schreiben
