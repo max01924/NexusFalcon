@@ -4,13 +4,13 @@ import json
 from groq import Groq
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from config.config import GROQ_API_KEY, GROQ_MODEL, GROQ_MAX_TOKENS
+from config.config import GROQ_API_KEY, GROQ_MODEL, GROQ_MAX_TOKENS_OUTPUT, GROQ_MAX_ZEICHEN_INPUT
 
 _SYSTEM_PROMPT = """Du fasst E-Mails zusammen. Antworte ausschließlich mit gültigem JSON (kein Markdown, keine Codefences).
 Das JSON muss genau diese Struktur haben:
-{"summary": ["Stichpunkt 1", "Stichpunkt 2", ...], "one_sentence": "ein einzelner deutscher Satz"}
-Für "summary": 3 bis 7 kurze sachliche Stichpunkte zum Inhalt.
-Für "one_sentence": eine prägnante Gesamtzusammenfassung auf Deutsch."""
+{"body_summary": ["Stichpunkt 1", "Stichpunkt 2", ...], "ai_tag_sentence": "ein einzelner deutscher Satz"}
+Für "body_summary": 3 bis 7 kurze sachliche Stichpunkte zum Inhalt.
+Für "ai_tag_sentence": eine prägnante Gesamtzusammenfassung auf Deutsch."""
 
 _USER_TEMPLATE = """Analysiere den folgenden E-Mail-Text:\n\n{body}"""
 
@@ -28,6 +28,8 @@ def analyze_email(email_body):
             "ai_tag_sentence": "Kein E-Mail-Inhalt vorhanden.",
         }
     
+    truncated_body = email_body.strip()[:GROQ_MAX_ZEICHEN_INPUT]
+
     client = Groq(
         api_key=GROQ_API_KEY,
     )
@@ -37,10 +39,10 @@ def analyze_email(email_body):
     model=GROQ_MODEL,
     messages=[
         {"role": "system", "content": _SYSTEM_PROMPT},
-        {"role": "user", "content": _USER_TEMPLATE.format(body=email_body.strip())}
+        {"role": "user", "content": _USER_TEMPLATE.format(body=truncated_body)}
     ],
     response_format={"type": "json_object"},
-    max_completion_tokens=GROQ_MAX_TOKENS,
+    max_completion_tokens=GROQ_MAX_TOKENS_OUTPUT,
     temperature=0.3
     )
 
