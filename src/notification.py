@@ -4,8 +4,6 @@ from tkinter import ttk
 
 class NotificationPopup:
     WINDOW_WIDTH = 350
-    COMPACT_HEIGHT = 120
-    EXPANDED_HEIGHT = 300
 
     def __init__(self, sender, subject, ai_tag_sentence, body_summary):
         """
@@ -28,8 +26,8 @@ class NotificationPopup:
         self._force_topmost()
         self.root.overrideredirect(True)
 
-        self._position_top_right()
         self._compact_view()
+        self._position_top_right()
         self._expanded_view()
         self._event_hover()
         self._start_timer()
@@ -39,9 +37,11 @@ class NotificationPopup:
         screen_width = self.root.winfo_screenwidth()
         margin = 20
         x = screen_width - self.WINDOW_WIDTH - margin
-        y = margin
+        y = margin + 40
+        self.root.update_idletasks()
+        required_height = self.root.winfo_reqheight()
         self.root.geometry(
-            f"{self.WINDOW_WIDTH}x{self.COMPACT_HEIGHT}+{x}+{y}"
+            f"{self.WINDOW_WIDTH}x{required_height}+{x}+{y}"
         )
 
     def _force_topmost(self):
@@ -55,21 +55,25 @@ class NotificationPopup:
             self.root,
             text="New Mail",
             anchor="w",
+            font=("Helvetica", 20, "bold"),
         )
         self.sender_label = ttk.Label(
             self.root,
             text=self.sender,
             anchor="w",
+            font=("Helvetica", 10, "italic")
         )
         self.subject_label = ttk.Label(
             self.root,
             text=self.subject,
             anchor="w",
+            font=("Helvetica", 14, "normal")
         )
         self.ai_tag_sentence_label = ttk.Label(
             self.root,
             text=self.ai_tag_sentence,
             anchor="w",
+            font=("Helvetica", 15, "normal")
         )
 
         self.header_label.pack(fill="x", padx=10, pady=2)
@@ -83,6 +87,7 @@ class NotificationPopup:
             text=self.body_summary,
             anchor="w",
             wraplength=self.WINDOW_WIDTH - 20,
+            font=("Helvetica", 15, "normal")
         )
 
     def _event_hover(self):
@@ -125,8 +130,10 @@ class NotificationPopup:
             return
 
         self.is_expanded = True
-        self.root.geometry(f"{self.WINDOW_WIDTH}x{self.EXPANDED_HEIGHT}")
         self.body_summary_label.pack(fill="x", padx=10, pady=2)
+        self.root.update_idletasks()  
+        required_height = self.root.winfo_reqheight()
+        self.root.geometry(f"{self.WINDOW_WIDTH}x{required_height}")
 
     def _on_leave(self, _event):
         self.root.after(50, self._check_leave)
@@ -138,7 +145,9 @@ class NotificationPopup:
         if self.is_expanded:
             self.is_expanded = False
             self.body_summary_label.pack_forget()
-            self.root.geometry(f"{self.WINDOW_WIDTH}x{self.COMPACT_HEIGHT}")
+            self.root.update_idletasks()
+            required_height = self.root.winfo_reqheight()
+            self.root.geometry(f"{self.WINDOW_WIDTH}x{required_height}")
 
         self._start_timer(5000)
 
