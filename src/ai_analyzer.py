@@ -20,12 +20,12 @@ def analyze_email(email_body):
     Analysiert E-Mail-Inhalt via Groq API.
     Args:
         email_body: E-Mail-Text
-    Returns: Dict mit {"summary": [...], "one_sentence": "..."}
+    Returns: Dict mit {"body_summary": [...], "ai_tag_sentence": "..."}
     """
     if not (email_body or "").strip():
         return {
-            "summary": [],
-            "one_sentence": "Kein E-Mail-Inhalt vorhanden.",
+            "body_summary": [],
+            "ai_tag_sentence": "Kein E-Mail-Inhalt vorhanden.",
         }
     
     client = Groq(
@@ -50,7 +50,7 @@ def analyze_email(email_body):
         raise ValueError("Antwort wurde wegen Token-Limit abgeschnitten.")
 
     if not raw:
-        raise ValueError("Leere Antwort von OpenAI.")
+        raise ValueError("Leere Antwort von Groq.")
     
     try:
         data = json.loads(raw)
