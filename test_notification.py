@@ -23,4 +23,8 @@ for email_data in emails:
     print(f"Gespeichert: {parsed['subject']}")
 
 # Pop-up Benachrichtigungen für jede Mail anzeigen
+sender = parsed["sender"]
+subject = parsed["subject"]
+ai_tag_sentence = analyzed["ai_tag_sentence"]
+body_summary = analyzed["body_summary"]
 NotificationPopup(sender, subject, ai_tag_sentence, body_summary)
