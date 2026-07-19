@@ -20,6 +20,7 @@ class NotificationPopup:
 
         self.is_expanded = False
         self.timer_id = None
+        self.topmost_timer_id = None
 
         self.root = tk.Tk()
         self.root.title("")
@@ -37,7 +38,7 @@ class NotificationPopup:
         screen_width = self.root.winfo_screenwidth()
         margin = 20
         x = screen_width - self.WINDOW_WIDTH - margin
-        y = margin + 40
+        y = margin + 35
         self.root.update_idletasks()
         required_height = self.root.winfo_reqheight()
         self.root.geometry(
@@ -48,31 +49,35 @@ class NotificationPopup:
         self.root.lift()
         self.root.attributes("-topmost", True)
         self.root.focus_force()
-        self.root.after(500, self._force_topmost)
+        self.topmost_timer_id = self.root.after(500, self._force_topmost)
 
     def _compact_view(self):
         self.header_label = ttk.Label(
             self.root,
             text="New Mail",
             anchor="w",
+            wraplength=self.WINDOW_WIDTH - 20,
             font=("Helvetica", 20, "bold"),
         )
         self.sender_label = ttk.Label(
             self.root,
             text=self.sender,
             anchor="w",
+            wraplength=self.WINDOW_WIDTH - 20,
             font=("Helvetica", 10, "italic")
         )
         self.subject_label = ttk.Label(
             self.root,
             text=self.subject,
             anchor="w",
+            wraplength=self.WINDOW_WIDTH - 20,
             font=("Helvetica", 14, "normal")
         )
         self.ai_tag_sentence_label = ttk.Label(
             self.root,
             text=self.ai_tag_sentence,
             anchor="w",
+            wraplength=self.WINDOW_WIDTH - 20,
             font=("Helvetica", 15, "normal")
         )
 
@@ -153,4 +158,6 @@ class NotificationPopup:
 
     def _hide_window(self):
         self.timer_id = None
+        if self.topmost_timer_id is not None:
+            self.root.after_cancel(self.topmost_timer_id)
         self.root.destroy()
