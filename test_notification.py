@@ -1,4 +1,5 @@
 import sys
+import tkinter as tk
 sys.path.append("src")
 from gmail_client import authenticate_gmail, get_unread_emails, parse_email
 from ai_analyzer import analyze_email
@@ -7,6 +8,8 @@ from notification import NotificationPopup
 # gmail_client: sender, subject
 # ai_analyzer: ai_tag_sentence, body_summary
 
+root = tk.Tk()
+root.withdraw()  # Hauptfenster ausblenden, für macOS bugfix
 
 # Gmail authentifizieren
 service = authenticate_gmail()
@@ -22,4 +25,4 @@ for email_data in emails:
     process_and_save_email(analyzed, parsed)
     print(f"Gespeichert: {parsed['subject']}")
     # Pop-up Benachrichtigungen für jede Mail anzeigen
-    NotificationPopup(sender=parsed["sender"], subject=parsed["subject"], ai_tag_sentence=analyzed["ai_tag_sentence"], body_summary=analyzed["body_summary"])
+    NotificationPopup(root, sender=parsed["sender"], subject=parsed["subject"], ai_tag_sentence=analyzed["ai_tag_sentence"], body_summary=analyzed["body_summary"])

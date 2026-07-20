@@ -5,14 +5,16 @@ from tkinter import ttk
 class NotificationPopup:
     WINDOW_WIDTH = 350
 
-    def __init__(self, sender, subject, ai_tag_sentence, body_summary):
+    def __init__(self,master, sender, subject, ai_tag_sentence, body_summary):
         """
         Args:
+            master: gemeinsames Tk-Root (wird ein Mal pro App erstellt und dann wiederverwendet)
             sender: Absender der Mail
             subject: Betreff
             ai_tag_sentence: KI-Ein-Satz-Zusammenfassung
             body_summary: Liste von Stichpunkten
         """
+        self.master = master
         self.sender = sender
         self.subject = subject
         self.ai_tag_sentence = ai_tag_sentence
@@ -22,7 +24,7 @@ class NotificationPopup:
         self.timer_id = None
         self.topmost_timer_id = None
 
-        self.root = tk.Tk()
+        self.root = tk.Toplevel(master)
         self.root.title("")
         self._force_topmost()
         self.root.overrideredirect(True)
@@ -32,7 +34,7 @@ class NotificationPopup:
         self._expanded_view()
         self._event_hover()
         self._start_timer()
-        self.root.mainloop()
+        self.master.wait_window(self.root)
 
     def _position_top_right(self):
         screen_width = self.root.winfo_screenwidth()
