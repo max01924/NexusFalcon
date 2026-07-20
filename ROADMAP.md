@@ -116,7 +116,7 @@
 **Wie wird getestet?** 5 Test\-E\-Mails \(unterschiedliche Längen/Inhalte\) analysieren, Output manuell prüfen ob sinnvoll\.
 **Was danach?** GUI kann gebaut werden, weil Backend\-Pipeline komplett ist\.
 ## **PHASE 5: Basic GUI \(Tkinter\) ⏳**
-**Status:** Abhängig von Phase 4
+**Status:** Abhängig von Phase 4 \- aktueller Arbeitsschritt \(nach Phase 7\-Prototyp vorgezogen, siehe Nachtrag dort\)
 **Ziel:** Minimale funktionsfähige Benutzeroberfläche zur E\-Mail\-Anzeige
 **Features:**
 - Hauptfenster mit E\-Mail\-Liste
@@ -170,18 +170,19 @@
 - logging \(built\-in\)
 **Wie wird getestet?** Polling\-Intervall auf 30 Sekunden setzen, Test\-Mail schicken, prüfen ob sie innerhalb 30 Sek\. in GUI erscheint\.
 **Was danach?** Benachrichtigungen können implementiert werden, weil wir Event\-Detection haben \(neue Mail\)\.
-## **PHASE 7: Benachrichtigungssystem ⏳**
-**Status:** Abhängig von Phase 6
+## **PHASE 7: Benachrichtigungssystem ⏳** *\(Prototyp ✅, Produktivversion offen\)*
+**Status:** Abhängig von Phase 6 \- Tkinter\-Prototyp bereits vorgezogen umgesetzt und funktional bestätigt, bevor Phase 5/6 dran waren
 **Ziel:** Desktop\-Notifications bei neuen E\-Mails mit Interaktivität \(Spotlight\-Style\)
+**Anpassung \(Nachtrag, 2026\-07\-20\):** notification\.py wurde als eigenständiger Tkinter\-Prototyp gebaut und mit echten Gmail\-/Groq\-Daten getestet \(test\_notification\.py\) \- Compact/Expand\-Ansicht per Hover, dynamische Fensterhöhe je nach Inhalt, Auto\-Hide\-Timer mit sauberem Cleanup, mehrere Popups nacheinander über eine gemeinsame versteckte Tk\-Root \(tk\.Toplevel statt mehrfach tk\.Tk\(\), da zweite Tk\(\)\-Instanz auf macOS zu TclError führt\)\. Fazit: Tkinter taugt hier nur als Prototyp zum Durchdenken/Zeigen des Prinzips, nicht als Produktivlösung \- Hover\-Erkennung bleibt bei versteckter Root fragil \(erfordert Klick statt reinem Hover, macOS\-Fokus\-Eigenheit\)\. Produktivumsetzung bleibt wie ursprünglich geplant bei plyer/pync für native OS\-Notifications, sobald Phase 6 \(Polling\) steht\.
 **Features:**
 - Native OS\-Benachrichtigungen \(Windows/macOS/Linux\)
 - Anklickbar \-> öffnet Detail in GUI oder Mini\-Popup
 - Zeigt: Absender, Ein\-Satz\-Summary, Zeit
 - Optional: Snooze/Dismiss
 **Tasks:**
-- \[ \] ⏳ Library recherchieren \(plyer, plyer10toast für Windows, pync für macOS\)
-- \[ \] ⏳ notification\.py Modul erstellen
-- \[ \] ⏳ Funktion: show\_notification\(sender, summary\) \- zeigt OS\-Notification
+- \[ \] ⏳ Library recherchieren \(plyer, plyer10toast für Windows, pync für macOS\) \- für Produktivversion, Tkinter\-Prototyp diente nur zum Prinzip\-Nachweis
+- \[ \] **✅** notification\.py Modul erstellen \(Tkinter\-Prototyp, siehe Nachtrag\)
+- \[ \] ⏳ Funktion: show\_notification\(sender, summary\) \- zeigt OS\-Notification \(native Umsetzung noch offen\)
 - \[ \] ⏳ Click\-Handler: Bei Klick \-> GUI\-Fenster in Vordergrund \+ E\-Mail selektieren
 - \[ \] ⏳ Integration mit Polling: Neue Mail \-> Notification triggern
 - \[ \] ⏳ Settings: Notifications on/off toggle in GUI
@@ -190,11 +191,12 @@
 - Klick auf Notification öffnet E\-Mail in App
 **Timeline:** Zu definieren \(plattformabhängig\)
 **Was wird gebaut?** Aufmerksamkeits\-System \- User wird über neue Mails informiert\.
-**Warum jetzt?** Polling läuft, Events \(neue Mails\) erkannt\. Notifications sind logischer nächster Schritt\.
+**Warum jetzt?** Polling läuft, Events \(neue Mails\) erkannt\. Notifications sind logischer nächster Schritt\. \(Prototyp wurde davon abweichend vorgezogen, um das Interaktionsprinzip früh zu validieren\.\)
 **Tools/Libraries:**
 - plyer oder plyer10toast \(Windows\)
 - pync \(macOS\)
 - Oder OS\-spezifische Lösung
+- tkinter \(built\-in, nur für Prototyp genutzt\)
 **Wie wird getestet?** Test\-Mail senden, warten bis Polling sie erkennt, prüfen ob Notification erscheint und anklickbar ist\.
 **Was danach?** Antwort\-Funktionalität, weil User jetzt Mails sehen und darauf reagieren wollen\.
 ## **PHASE 8: E\-Mail Antwort\-Funktionalität ⏳**
