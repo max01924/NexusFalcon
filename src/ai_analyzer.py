@@ -58,9 +58,9 @@ def analyze_email(email_body):
         data = json.loads(raw)
     except json.JSONDecodeError as e:
         raise ValueError(f"Ungültiges JSON in der Antwort: {e}") from e
-    
-    body_summary = data.get("summary")
-    ai_tag_sentence = data.get("one_sentence")
+
+    body_summary = data.get("body_summary")
+    ai_tag_sentence = data.get("ai_tag_sentence")
     
     if not isinstance(body_summary, list):
         raise ValueError('"body_summary" muss eine Liste sein.')

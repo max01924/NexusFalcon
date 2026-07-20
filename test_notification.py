@@ -21,10 +21,5 @@ for email_data in emails:
     analyzed = analyze_email(parsed["body_full"])
     process_and_save_email(analyzed, parsed)
     print(f"Gespeichert: {parsed['subject']}")
-
-# Pop-up Benachrichtigungen für jede Mail anzeigen
-sender = parsed["sender"]
-subject = parsed["subject"]
-ai_tag_sentence = analyzed["ai_tag_sentence"]
-body_summary = analyzed["body_summary"]
-NotificationPopup(sender, subject, ai_tag_sentence, body_summary)
+    # Pop-up Benachrichtigungen für jede Mail anzeigen
+    NotificationPopup(sender=parsed["sender"], subject=parsed["subject"], ai_tag_sentence=analyzed["ai_tag_sentence"], body_summary=analyzed["body_summary"])
