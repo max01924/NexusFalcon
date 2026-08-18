@@ -15,11 +15,14 @@ class EmailGui():
         self.root = tk.Toplevel(master)
         self.root.title("Email Inbox")
         self._position()
+        self._window()
+        self._email_list()
+        self._email_details()
 
     def _position (self):
         screen_width = self.root.winfo_screenwidth()
         screen_height = self.root.winfo_screenheight()
-        window_width = int(screen_width * 0.6)
+        self.window_width = int(screen_width * 0.6)
         window_height = int(screen_height * 0.6)
         x = (screen_width - window_width) // 2
         y = (screen_height - window_height) // 2
@@ -31,57 +34,56 @@ class EmailGui():
     
         self.frame_email_list = ttk.Frame(self.paned)
         self.frame_email_details = ttk.Frame(self.paned)
-        self.frame_email_list.pack(side="left", fill="both", expand="True")
-        self.frame_email_details.pack(side="right", fill="both", expand="True")
 
         self.paned.add(self.frame_email_list, weight=1)
         self.paned.add(self.frame_email_details, weight=2)
 
     def _email_list(self):
-        treeview = ttk.Treeview(self.frame_email_list, columns="sender, subject, date_received", show="headings", selectmode="browse")
-        treeview.heading("sender", text="Sender")
-        treeview.heading("subject", text="Subject")
-        treeview.heading("date_received", text="Date Received")
+        self.treeview = ttk.Treeview(self.frame_email_list, columns=("sender", "subject", "date_received"), show="headings", selectmode="browse")
 
-        treeview.column("sender", anchor="w")
-        treeview.column("subject", anchor="w")
-        treeview.column("date_received", anchor="w")
+        self.treeview.heading("sender", text="Sender")
+        self.treeview.heading("subject", text="Subject")
+        self.treeview.heading("date_received", text="Date Received")
+
+        self.treeview.column("sender", anchor="w")
+        self.treeview.column("subject", anchor="w")
+        self.treeview.column("date_received", anchor="w")
 
     def _email_details(self):
         self.label_sender = ttk.Label(
             self.frame_email_details,
             text=self.sender,
-            wraplength=self.WINDOW_WIDTH - 20,
+            wraplength=self.window_width - 20,
             font=("Helvetica", 10, "italic")
         )
         self.label_subject = ttk.Label(
             self.frame_email_details,
             text=self.subject,
-            wraplength=self.WINDOW_WIDTH - 20,
+            wraplength=self.window_width - 20,
             font=("Helvetica", 14, "normal")
         )
-        self.date_received = ttk.Label(
+        self.label_date_received = ttk.Label(
             self.frame_email_details,
-            text=self.date_received
-            wraplength=self.WINDOW_WIDTH - 20,
+            text=self.date_received,
+            wraplength=self.window_width - 20,
             font=("Helvetica", 10, "normal")
         )
         self.label_full_body = ttk.Label(
             self.frame_email_details,
-            text=self.subject,
-            wraplength=self.WINDOW_WIDTH - 20,
+            text=self.full_body,
+            wraplength=self.window_width - 20,
             font=("Helvetica", 15, "normal")
         )
         self.label_ai_tag_sentence = ttk.Label(
             self.frame_email_details,
             text=self.ai_tag_sentence,
-            wraplength=self.WINDOW_WIDTH - 20,
+            wraplength=self.window_width - 20,
             font=("Helvetica", 15, "normal")
         )
         self.label_body_summary = ttk.Label(
             self.frame_email_details,
             text=self.body_summary,
-            wraplength=self.WINDOW_WIDTH - 20,
+            wraplength=self.window_width - 20,
             font=("Helvetica", 15, "normal")
         )
         
