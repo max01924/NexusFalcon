@@ -3,14 +3,10 @@ from tkinter import ttk
 
 class EmailGui():
 
-    def __init__(self, master, sender, subject, body_full, date_received, ai_tag_sentence, body_summary):
+    def __init__(self, master, db_path):
         self.master = master
-        self.sender = sender
-        self.subject = subject
-        self.body_full = body_full
-        self.date_received = date_received
-        self.ai_tag_sentence = ai_tag_sentence
-        self.body_summary = body_summary
+        self.db_path = db_path
+        self.current_email_id = None
 
         self.root = tk.Toplevel(master)
         self.root.title("Email Inbox")
@@ -50,46 +46,41 @@ class EmailGui():
         self.treeview.column("date_received", anchor="w")
 
     def _email_details(self):
-        self.label_sender = ttk.Label(
-            self.frame_email_details,
-            text=self.sender,
+        self.label_sender.config(
+            text=email["sender"],
             wraplength=self.window_width - 20,
             font=("Helvetica", 10, "italic")
         )
-        self.label_subject = ttk.Label(
+        self.label_subject.config(
             self.frame_email_details,
-            text=self.subject,
+            text=email["subject"],
             wraplength=self.window_width - 20,
             font=("Helvetica", 14, "normal")
         )
-        self.label_date_received = ttk.Label(
+        self.label_date_received.config(
             self.frame_email_details,
-            text=self.date_received,
+            text=email["date_received"],
             wraplength=self.window_width - 20,
             font=("Helvetica", 10, "normal")
         )
-        self.label_full_body = ttk.Label(
+        self.label_full_body.config(
             self.frame_email_details,
-            text=self.full_body,
+            text=email["full_body"],
             wraplength=self.window_width - 20,
             font=("Helvetica", 15, "normal")
         )
-        self.label_ai_tag_sentence = ttk.Label(
+        self.label_ai_tag_sentence.config(
             self.frame_email_details,
-            text=self.ai_tag_sentence,
+            text=email["ai_tag_sentence"],
             wraplength=self.window_width - 20,
             font=("Helvetica", 15, "normal")
         )
-        self.label_body_summary = ttk.Label(
+        self.label_body_summary.config(
             self.frame_email_details,
-            text=self.body_summary,
+            text=email["body_summary"],
             wraplength=self.window_width - 20,
             font=("Helvetica", 15, "normal")
         )
         
-        self.label_sender.pack(fill="x", padx=10, pady=2)
-        self.label_subject.pack(fill="x", padx=10, pady=2)
-        self.label_date_received.pack(fill="x", padx=10, pady=2)
-        self.label_full_body.pack(fill="x", padx=10, pady=2)
-        self.label_ai_tag_sentence.pack(fill="x", padx=10, pady=2)
-        self.label_body_summary.pack(fill="x", padx=10, pady=2)
+    def fetch_email_data(self):
+        
