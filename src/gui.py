@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
+import sqlite3
+from database import get_all_emails
 
 class EmailGui():
 
@@ -20,9 +22,9 @@ class EmailGui():
         screen_height = self.root.winfo_screenheight()
         self.window_width = int(screen_width * 0.6)
         window_height = int(screen_height * 0.6)
-        x = (screen_width - window_width) // 2
+        x = (screen_width - self.window_width) // 2
         y = (screen_height - window_height) // 2
-        self.root.geometry(f"{window_width}x{window_height}+{x}+{y}")
+        self.root.geometry(f"{self.window_width}x{window_height}+{x}+{y}")
 
     def _window(self):
         self.paned = ttk.PanedWindow(self.root, orient="horizontal")
@@ -35,11 +37,13 @@ class EmailGui():
         self.paned.add(self.frame_email_details, weight=2)
 
     def _email_list(self):
+        self.emails = get_all_emails()
+
         self.treeview = ttk.Treeview(self.frame_email_list, columns=("sender", "subject", "date_received"), show="headings", selectmode="browse")
 
-        self.treeview.heading("sender", text="Sender")
-        self.treeview.heading("subject", text="Subject")
-        self.treeview.heading("date_received", text="Date Received")
+        self.treeview.heading("sender", text=f"{self.emails["sender"]}")
+        self.treeview.heading("subject", text=f"{self.emails["subject"]}")
+        self.treeview.heading("date_received", text="self.emails["date_received"]")
 
         self.treeview.column("sender", anchor="w")
         self.treeview.column("subject", anchor="w")
@@ -47,40 +51,37 @@ class EmailGui():
 
     def _email_details(self):
         self.label_sender.config(
-            text=email["sender"],
+            text=self.email["sender"],
             wraplength=self.window_width - 20,
             font=("Helvetica", 10, "italic")
         )
         self.label_subject.config(
             self.frame_email_details,
-            text=email["subject"],
+            text=self.email["subject"],
             wraplength=self.window_width - 20,
             font=("Helvetica", 14, "normal")
         )
         self.label_date_received.config(
             self.frame_email_details,
-            text=email["date_received"],
+            text=self.email["date_received"],
             wraplength=self.window_width - 20,
             font=("Helvetica", 10, "normal")
         )
         self.label_full_body.config(
             self.frame_email_details,
-            text=email["full_body"],
+            text=self.email["full_body"],
             wraplength=self.window_width - 20,
             font=("Helvetica", 15, "normal")
         )
         self.label_ai_tag_sentence.config(
             self.frame_email_details,
-            text=email["ai_tag_sentence"],
+            text=self.email["ai_tag_sentence"],
             wraplength=self.window_width - 20,
             font=("Helvetica", 15, "normal")
         )
         self.label_body_summary.config(
             self.frame_email_details,
-            text=email["body_summary"],
+            text=self.email["body_summary"],
             wraplength=self.window_width - 20,
             font=("Helvetica", 15, "normal")
         )
-        
-    def fetch_email_data(self):
-        
