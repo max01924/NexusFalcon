@@ -8,6 +8,7 @@ class EmailGui():
     def __init__(self, master, db_path):
         self.master = master
         self.db_path = db_path
+        self.all_emails = get_all_emails()
         self.current_email_id = None
 
         self.root = tk.Toplevel(master)
@@ -37,51 +38,66 @@ class EmailGui():
         self.paned.add(self.frame_email_details, weight=2)
 
     def _email_list(self):
-        self.emails = get_all_emails()
-
         self.treeview = ttk.Treeview(self.frame_email_list, columns=("sender", "subject", "date_received"), show="headings", selectmode="browse")
 
-        self.treeview.heading("sender", text=f"{self.emails["sender"]}")
-        self.treeview.heading("subject", text=f"{self.emails["subject"]}")
-        self.treeview.heading("date_received", text="self.emails["date_received"]")
+        if self.all_emails:
 
-        self.treeview.column("sender", anchor="w")
-        self.treeview.column("subject", anchor="w")
-        self.treeview.column("date_received", anchor="w")
+            for email in self.all_emails:
+                self.treeview.heading("sender", text=f"{email['sender']}")
+                self.treeview.heading("subject", text=f"{email['subject']}")
+                self.treeview.heading("date_received", text=f"{email['date_received']}")
 
-    def _email_details(self):
+                self.treeview.column("sender", anchor="w")
+                self.treeview.column("subject", anchor="w")
+                self.treeview.column("date_received", anchor="w")
+
+        else:
+            self.treeview.heading("sender", text="Keine E-Mails gefunden")
+            self.treeview.heading("subject", text="")
+            self.treeview.heading("date_received", text="")
+
+    def _on_email_select(self, event):
+        selected = self.treeview.selection()
+        if not selected:
+            return
+        self.current_email_id = int(selected[0])
+        self._email_details(self.current_email_id)
+
+    def _email_details(self, email_id):
+        email = self.all_emails[email_id]
+
         self.label_sender.config(
-            text=self.email["sender"],
+            text=email["sender"],
             wraplength=self.window_width - 20,
             font=("Helvetica", 10, "italic")
         )
         self.label_subject.config(
             self.frame_email_details,
-            text=self.email["subject"],
+            text=email["subject"],
             wraplength=self.window_width - 20,
             font=("Helvetica", 14, "normal")
         )
         self.label_date_received.config(
             self.frame_email_details,
-            text=self.email["date_received"],
+            text=email["date_received"],
             wraplength=self.window_width - 20,
             font=("Helvetica", 10, "normal")
         )
         self.label_full_body.config(
             self.frame_email_details,
-            text=self.email["full_body"],
+            text=email["full_body"],
             wraplength=self.window_width - 20,
             font=("Helvetica", 15, "normal")
         )
         self.label_ai_tag_sentence.config(
             self.frame_email_details,
-            text=self.email["ai_tag_sentence"],
+            text=email["ai_tag_sentence"],
             wraplength=self.window_width - 20,
             font=("Helvetica", 15, "normal")
         )
         self.label_body_summary.config(
             self.frame_email_details,
-            text=self.email["body_summary"],
+            text=email["body_summary"],
             wraplength=self.window_width - 20,
             font=("Helvetica", 15, "normal")
         )

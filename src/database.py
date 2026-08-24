@@ -65,7 +65,7 @@ def get_all_emails():
     cursor = conn.cursor()
     
     cursor.execute("SELECT * FROM emails ORDER BY created_at DESC")
-    rows = cursor. fetchall()
+    rows = cursor.fetchall()
 
     columns = [description[0] for description in cursor.description]
     results = [dict(zip(columns, row)) for row in rows]
