@@ -13,6 +13,7 @@ class EmailGui():
         self.root.title("Email Inbox")
         self._position()
         self._window()
+        self._create_email_details()
         self._email_list()
 
     def _position (self):
@@ -62,16 +63,16 @@ class EmailGui():
         if not selected:
             return
         self.current_email_id = int(selected[0])
-        self._email_details(self.current_email_id)
+        self._update_email_details(self.current_email_id)
 
     def _create_email_details(self):
 
-        self.label_sender = ttk.Label()
-        self.label_ssubject = ttk.Label()
-        self.label_date_received = ttk.Label()
-        self.label_body_full = ttk.Label()
-        self.label_ai_tag_sentence = ttk.Label()
-        self.label_body_summary = ttk.Label()
+        self.label_sender = ttk.Label(self.frame_email_details)
+        self.label_subject = ttk.Label(self.frame_email_details)
+        self.label_date_received = ttk.Label(self.frame_email_details)
+        self.label_body_full = ttk.Label(self.frame_email_details)
+        self.label_ai_tag_sentence = ttk.Label(self.frame_email_details)
+        self.label_body_summary = ttk.Label(self.frame_email_details)
 
         self.label_sender.pack(fill="x", padx=10, pady=2)
         self.label_subject.pack(fill="x", padx=10, pady=2)
@@ -119,6 +120,7 @@ class EmailGui():
 
         if self.refreshed_all_emails == self.all_emails:
             self.root.after(60000, self._refresh_emails)
+            return
 
         self.all_emails = self.refreshed_all_emails
 
