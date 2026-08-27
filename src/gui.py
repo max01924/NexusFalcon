@@ -1,14 +1,13 @@
 import tkinter as tk
 from tkinter import ttk
-from database import get_all_emails
+from database import get_all_emails, get_email_by_id
 
 class EmailGui():
 
-    def __init__(self, master, db_path):
+    def __init__(self, master):
         self.master = master
-        self.db_path = db_path
-        self._refresh_emails()
         self.current_email_id = None
+        self.all_emails = get_all_emails()
 
         self.root = tk.Toplevel(master)
         self.root.title("Email Inbox")
@@ -40,11 +39,11 @@ class EmailGui():
 
         if self.all_emails:
 
-            for email in self.all_emails:
-                self.treeview.heading("sender", text="Absender")
-                self.treeview.heading("subject", text="Betreff")
-                self.treeview.heading("date_received", text="Datum")
+            self.treeview.heading("sender", text="Absender")
+            self.treeview.heading("subject", text="Betreff")
+            self.treeview.heading("date_received", text="Datum")
 
+            for email in self.all_emails:
                 self.treeview.insert("", "end", iid=email["id"], values=(email["sender"], email["subject"], email["date_received"]))
 
         else:
@@ -65,8 +64,24 @@ class EmailGui():
         self.current_email_id = int(selected[0])
         self._email_details(self.current_email_id)
 
-    def _email_details(self, email_id):
-        email = self.all_emails[email_id]
+    def _create_email_details(self):
+
+        self.label_sender = ttk.Label()
+        self.label_ssubject = ttk.Label()
+        self.label_date_received = ttk.Label()
+        self.label_body_full = ttk.Label()
+        self.label_ai_tag_sentence = ttk.Label()
+        self.label_body_summary = ttk.Label()
+
+        self.label_sender.pack(fill="x", padx=10, pady=2)
+        self.label_subject.pack(fill="x", padx=10, pady=2)
+        self.label_date_received.pack(fill="x", padx=10, pady=2)
+        self.label_body_full.pack(fill="x", padx=10, pady=2)
+        self.label_ai_tag_sentence.pack(fill="x", padx=10, pady=2)
+        self.label_body_summary.pack(fill="x", padx=10, pady=2)
+
+    def _update_email_details(self, email_id):
+        email = get_email_by_id(email_id)
 
         self.label_sender.config(
             text=email["sender"],
@@ -99,18 +114,11 @@ class EmailGui():
             font=("Helvetica", 15, "normal")
         )
 
-        self.label_sender.pack(fill="x", padx=10, pady=2)
-        self.label_subject.pack(fill="x", padx=10, pady=2)
-        self.label_date_received.pack(fill="x", padx=10, pady=2)
-        self.label_body_full.pack(fill="x", padx=10, pady=2)
-        self.label_ai_tag_sentence.pack(fill="x", padx=10, pady=2)
-        self.label_body_summary.pack(fill="x", padx=10, pady=2)
-
     def _refresh_emails(self):
         self.refreshed_all_emails = get_all_emails()
 
         if self.refreshed_all_emails == self.all_emails:
-            return
+            self.root.after(60000, self._refresh_emails)
 
         self.all_emails = self.refreshed_all_emails
 
@@ -120,4 +128,4 @@ class EmailGui():
         for email in self.all_emails:
             self.treeview.insert("", "end", iid=email["id"], values=(email["sender"], email["subject"], email["date_received"]))
 
-        self.root.after(60000, self._refresh_emails))
+        self.root.after(60000, self._refresh_emails)
