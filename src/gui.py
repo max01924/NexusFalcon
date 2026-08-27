@@ -7,7 +7,7 @@ class EmailGui():
     def __init__(self, master, db_path):
         self.master = master
         self.db_path = db_path
-        self.all_emails = get_all_emails()
+        self._refresh_emails()
         self.current_email_id = None
 
         self.root = tk.Toplevel(master)
@@ -56,6 +56,8 @@ class EmailGui():
 
         self.treeview.bind("<<TreeviewSelect>>", self._on_email_select)
 
+        self._refresh_emails()
+
     def _on_email_select(self, event):
         selected = self.treeview.selection()
         if not selected:
@@ -103,3 +105,19 @@ class EmailGui():
         self.label_body_full.pack(fill="x", padx=10, pady=2)
         self.label_ai_tag_sentence.pack(fill="x", padx=10, pady=2)
         self.label_body_summary.pack(fill="x", padx=10, pady=2)
+
+    def _refresh_emails(self):
+        self.refreshed_all_emails = get_all_emails()
+
+        if self.refreshed_all_emails == self.all_emails:
+            return
+
+        self.all_emails = self.refreshed_all_emails
+
+        for item in self.treeview.get_children():
+            self.treeview.delete(item)
+
+        for email in self.all_emails:
+            self.treeview.insert("", "end", iid=email["id"], values=(email["sender"], email["subject"], email["date_received"]))
+
+        self.root.after(60000, self._refresh_emails))
