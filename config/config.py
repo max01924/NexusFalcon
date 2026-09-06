@@ -10,7 +10,7 @@ MAX_EMAILS_PER_FETCH = 10
 
 #Groq API
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-GROQ_MODEL = "llama-3.3-70b-versatile"
+GROQ_MODEL = "openai/gpt-oss-20b"
 GROQ_MAX_TOKENS_OUTPUT = 1000
 GROQ_MAX_ZEICHEN_INPUT = 6000
 
