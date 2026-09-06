@@ -5,7 +5,7 @@ from tkinter import ttk
 class NotificationPopup:
     WINDOW_WIDTH = 350
 
-    def __init__(self,master, sender, subject, ai_tag_sentence, body_summary):
+    def __init__(self, master, sender, subject, ai_tag_sentence, body_summary):
         """
         Args:
             master: gemeinsames Tk-Root (wird ein Mal pro App erstellt und dann wiederverwendet)
