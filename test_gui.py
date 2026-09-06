@@ -29,4 +29,6 @@ for email_data in emails:
     # Pop-up Benachrichtigungen für jede Mail anzeigen
     NotificationPopup(root, sender=parsed["sender"], subject=parsed["subject"], ai_tag_sentence=analyzed["ai_tag_sentence"], body_summary=analyzed["body_summary"])
 
-EmailGui(root)
+gui = EmailGui(root)
+
+root.mainloop()
